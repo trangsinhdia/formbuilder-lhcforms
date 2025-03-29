@@ -1,59 +1,48 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
-interface FormState {
-  formData: any;
-  selectedItem: any | null;
-  isLoading: boolean;
+interface FormContextType {
+  announceError: (message: string) => void;
+  clearError: () => void;
   error: string | null;
 }
 
-type FormAction =
-  | { type: 'SET_FORM_DATA'; payload: any }
-  | { type: 'SET_SELECTED_ITEM'; payload: any }
-  | { type: 'SET_LOADING'; payload: boolean }
-  | { type: 'SET_ERROR'; payload: string | null };
-
-const initialState: FormState = {
-  formData: null,
-  selectedItem: null,
-  isLoading: false,
+const FormContext = createContext<FormContextType>({
+  announceError: () => {},
+  clearError: () => {},
   error: null,
-};
+});
 
-const FormContext = createContext<{
-  state: FormState;
-  dispatch: React.Dispatch<FormAction>;
-} | null>(null);
+export const useFormContext = () => useContext(FormContext);
 
-function formReducer(state: FormState, action: FormAction): FormState {
-  switch (action.type) {
-    case 'SET_FORM_DATA':
-      return { ...state, formData: action.payload };
-    case 'SET_SELECTED_ITEM':
-      return { ...state, selectedItem: action.payload };
-    case 'SET_LOADING':
-      return { ...state, isLoading: action.payload };
-    case 'SET_ERROR':
-      return { ...state, error: action.payload };
-    default:
-      return state;
-  }
+interface FormProviderProps {
+  children: React.ReactNode;
 }
 
-export function FormProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(formReducer, initialState);
+export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
+  const [error, setError] = useState<string | null>(null);
+
+  const announceError = useCallback((message: string) => {
+    setError(message);
+    // Optional: Use browser's native accessibility API
+    if (typeof window !== 'undefined' && 'LiveAnnouncer' in window) {
+      // @ts-ignore
+      window.LiveAnnouncer.announce(message);
+    }
+  }, []);
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  const value = {
+    announceError,
+    clearError,
+    error,
+  };
 
   return (
-    <FormContext.Provider value={{ state, dispatch }}>
+    <FormContext.Provider value={value}>
       {children}
     </FormContext.Provider>
   );
-}
-
-export function useForm() {
-  const context = useContext(FormContext);
-  if (!context) {
-    throw new Error('useForm must be used within a FormProvider');
-  }
-  return context;
-}
+};
