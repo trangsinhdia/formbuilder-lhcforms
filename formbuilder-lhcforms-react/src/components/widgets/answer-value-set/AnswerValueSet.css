@@ -1,0 +1,44 @@
+.answer-value-set {
+  margin-bottom: 1rem;
+}
+
+.answer-value-set .snomed-section {
+  padding: 0;
+}
+
+.answer-value-set .lfb-tooltip-link {
+  color: #1976d2;
+  text-decoration: none;
+}
+
+.answer-value-set .lfb-tooltip-link:hover {
+  text-decoration: underline;
+}
+
+.answer-value-set .text-muted {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.answer-value-set .fst-italic {
+  font-style: italic;
+}
+
+.answer-value-set .text-decoration-underline {
+  text-decoration: underline;
+}
+
+.answer-value-set .text-break {
+  word-break: break-word;
+}
+
+.answer-value-set .mt-2 {
+  margin-top: 1rem;
+}
+
+.answer-value-set .mt-3 {
+  margin-top: 1.5rem;
+}
+
+.answer-value-set .mb-1 {
+  margin-bottom: 0.5rem;
+}
