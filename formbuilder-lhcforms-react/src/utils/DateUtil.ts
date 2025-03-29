@@ -17,6 +17,10 @@ interface DateTimeStruct {
 }
 
 export class DateUtil {
+  static isValidDate(date: Date): boolean {
+    return date instanceof Date && !isNaN(date.getTime());
+  }
+  
   static parseISOToDateTime(value: string | null, dateOnly = false): DateTimeStruct {
     const result: DateTimeStruct = {
       dateStruct: null,
